@@ -1,0 +1,22 @@
+workflows:
+  bible_maps_release:
+    name: Bible Maps Release
+    max_build_duration: 60
+    environment:
+      groups: []
+      vars:
+        GRADLE_TASK: ":app:assembleRelease"
+    scripts:
+      - name: Accept Android Licenses
+        script: yes | sdkmanager --licenses || true
+      - name: Fix Gradle Wrapper Permission
+        script: chmod +x ./gradlew
+      - name: Build Release APK
+        script: ./gradlew --no-daemon clean $GRADLE_TASK
+    artifacts:
+      - app/build/outputs/**/*.apk
+      - app/build/outputs/**/*.aab
+    publishing:
+      email:
+        recipients:
+          - "abdachisa.dugasa@gmail.com"
